@@ -6,7 +6,6 @@ exports.getStatus = (req, res) => {
 };
 
 exports.getTopics = (req, res, next) => {
-    //console.log("in controller")
     fetchTopics().then((topics) => {
         res.status(200).send({ topics });
     })

@@ -19,15 +19,19 @@ describe('/api', () => {
           });
     });
     test('GET - status: 200 - returns all topics', () => {
-    return request(app)
-        .get('/api/topics')
-        .expect(200)
-        .then((response) => {
-            expect(response.body.topics.length).toBe(3);
-            expect(response.body.topics[0]).toHaveProperty('slug');
-            expect(response.body.topics[0]).toHaveProperty('description');
-        });
-    });
+        return request(app)
+            .get('/api/topics')
+            .expect(200)
+            .then((response) => {
+                console.log(response.body);
+                expect(response.body.topics.length).toBe(3);
+                response.body.topics.forEach((topic) => {
+                  expect(topic).toHaveProperty("description");
+                  expect(topic).toHaveProperty("slug");
+                  expect(typeof topic).toBe("object");
+                });
+            });
+    });    
     test('GET - status: 404 - response with not-found status message', () => {
         return request(app)
           .get('/api/blablabla')
