@@ -6,13 +6,14 @@ We will be building an API for the purpose of accessing application data program
 
 Your database will be PSQL, and you will interact with it using [node-postgres](https://node-postgres.com/).
 
-## Kanban
 
-### Link to your Trello Board here: https://trello.com/b/7yiHe1nI
+## CAUTION: 
+As in the original project some files have been added to .gitignore file, please read below:
+```
+You will need to create two .env files for your project: .env.test and .env.development. 
 
-To keep track of the tasks involved in this project we're going to use a kanban board. Ensure that you work on one _ticket_ at time. You can click on the ticket to find out more information about what is required for the feature. A ticket is not considered complete unless both the happy path and errors response are handled. You can make use of the checklist on each ticket to keep track of the errors you want to handle. You can also make use of [error-handling.md](error-handling.md) to consider the error codes we may wish to respond with.
-
-**Please ensure you work through the tickets in numerical order.**
+Into each, add PGDATABASE=<database_name_here>, with the correct database name for that environment (see /db/setup.sql for the database names).
+```
 
 ## Git Branching and Pull Requests
 
@@ -32,22 +33,6 @@ When pushing the branch to git hub ensure that you make reference to the branch 
 
 ```
 git push origin <branch name>
-```
-
-From github you can make a pull request and share the link and ticket number via a pull request specific nchelp using the command `nchelp pr`. A tutor will swing by to review your code. Ensure that you keep your trello up to date whilst you await the PR approval. Regular `nchelp` will be available for when you need support.
-
-Once a pull request been accepted be sure to switch back to the main branch and pull down the updated changes.
-
-```
-git checkout main
-
-git pull origin main
-```
-
-You can tidy up your local branches once they have been pull into main by deleting them:
-
-```
-git branch -D <local branch>
 ```
 
 ## Husky
