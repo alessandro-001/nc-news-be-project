@@ -53,4 +53,4 @@ exports.getComments = (req, res, next) => {
     });
 };
 
-exports.postComments = ()
+//exports.postComments = ()

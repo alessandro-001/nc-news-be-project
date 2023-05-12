@@ -23,7 +23,7 @@ app.get('/api/articles/:article_id/comments', getComments);
 
 
 //POST
-app.post('/api/articles/:article_id/comments', postComments);
+//app.post('/api/articles/:article_id/comments', postComments);
 
 //ERROR handling
 app.all('*', (req, res) => {
