@@ -27,7 +27,6 @@ exports.getApi = (req, res, next) => {
 
 exports.getArticlesById = (req, res, next) => {
     const id = req.params.articles_id;
-    //console.log(id);
     fetchArticlesId(id).then((article) => {
         res.status(200).send({ article });
     }).catch((err) => {
@@ -53,3 +52,5 @@ exports.getComments = (req, res, next) => {
         next(err);
     });
 };
+
+exports.postComments = ()

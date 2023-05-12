@@ -5,10 +5,12 @@ const {
     getApi,
     getArticlesById,
     getArticles,
-    getComments
+    getComments,
+    postComments
  } = require('./controllers/news.controller');
 
 
+//GET
 app.get('/api/topics', getTopics);
  
 app.get('/api', getApi);
@@ -17,9 +19,13 @@ app.get('/api/articles/:articles_id', getArticlesById);
 
 app.get('/api/articles', getArticles);
 
-app.get("/api/articles/:article_id/comments", getComments);
+app.get('/api/articles/:article_id/comments', getComments);
 
 
+//POST
+app.post('/api/articles/:article_id/comments', postComments);
+
+//ERROR handling
 app.all('*', (req, res) => {
     res.status(404).send({ msg: 'Error! Please check endpoint and try again' })
 });
@@ -43,7 +49,6 @@ app.use((err, req, res, next) => {
     }
     next(err);
   });
-
 
 
 module.exports = app;
