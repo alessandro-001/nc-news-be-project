@@ -67,3 +67,23 @@ exports.fetchArticles = () => {
         return result.rows;
     })
 };
+
+exports.fetchNewComment = (id, author, commentBody) => {
+    const queryArr = [author, commentBody, id];
+    let queryStr = `
+    INSERT INTO comments
+    (author, body, article_id)
+    VALUES
+    ($1, $2, $3)
+    RETURNING *;
+    `;
+    if (!author) {
+      return Promise.reject({ status: 400, msg: "author data required" });
+    }
+    if (!commentBody) {
+      return Promise.reject({ status: 400, msg: "body data required" });
+    }
+    return connection.query(queryStr, queryArr).then((res) => {
+    return res.rows;
+    });
+};

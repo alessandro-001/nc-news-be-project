@@ -143,3 +143,86 @@ describe('/api/articles/:article_id/comments', () => {
       });
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("POST - status 201 - Returns status 201 and posted comment object", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({
+        username: "butter_bridge",
+        body: "Thank you for posting",
+      })
+      .expect(201)
+      .then((response) => {
+        expect(response.body.commentPosted[0]).toEqual(
+          expect.objectContaining({
+            article_id: expect.any(Number),
+            author: expect.any(String),
+            body: expect.any(String),
+            comment_id: expect.any(Number),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+          })
+        );
+      });
+  });
+  test("GET - status: 400 - error message when missing the body", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({
+        username: "butter_bridge",
+      })
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("body data required");
+      });
+  });
+  test("GET - status: 400 - error message when missing the author", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({
+        body: "Thank you for posting",
+      })
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("author data required");
+      });
+  });
+  test("GET - status: 404 - error message when username not found", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({
+        username: "alessandroF",
+        body: "Thank you for posting"
+      })
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+  test("GET - status: 404 - error message when article doen't exist", () => {
+    return request(app)
+      .post("/api/articles/123456789/comments")
+      .send({
+        username: "butter_bridge",
+        body: "Thank you for posting"
+      })
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+  test("GET - status: 201 - posted comment object with no extra properties", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({
+        username: "butter_bridge",
+        body: "Thank you for posting",
+        nonsense: "Testing value",
+      })
+      .expect(201)
+      .then((response) => {
+        expect(response.body.commentPosted).not.toHaveProperty("nonsense");
+      });
+  });
+});
