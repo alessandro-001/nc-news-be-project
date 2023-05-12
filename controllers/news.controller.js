@@ -3,7 +3,8 @@ const {
     fetchApi, 
     fetchArticlesId,
     fetchArticles,
-    fetchComments
+    fetchComments,
+    fetchNewComment
 } = require('../models/news.model')
 
 
@@ -53,6 +54,13 @@ exports.getComments = (req, res, next) => {
     });
 };
 
-// exports.postComments = (req, res, next) => {
-//     const id = 
-// }
+exports.postComments = (req, res, next) => {
+    const id = req.params.article_id;
+    const author = req.body.username;
+    const commentBody = req.body.body;
+    fetchNewComment(id, author, commentBody).then((result) => {
+      return res.status(201).send({ commentPosted: result })
+    }).catch((err) => {
+      next(err)
+    })
+  };
