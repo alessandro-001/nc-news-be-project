@@ -3,7 +3,8 @@ const app = express();
 const { 
     getTopics,
     getApi,
-    getArticlesById
+    getArticlesById,
+    getArticles
  } = require('./controllers/news.controller');
 
 
@@ -12,6 +13,9 @@ app.get('/api/topics', getTopics);
 app.get('/api', getApi);
 
 app.get('/api/articles/:articles_id', getArticlesById);
+
+app.get('/api/articles', getArticles);
+
 
 
 app.all('*', (req, res) => {
@@ -30,6 +34,8 @@ app.use((err, req, res, next) => {
         res.status(err.status).send({ msg: err.msg })
     }
 })
+
+
 
 module.exports = app;
 

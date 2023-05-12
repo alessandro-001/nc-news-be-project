@@ -50,7 +50,7 @@ describe('/api', () => {
       });      
 });
 
-describe.only('/api/articles/:article_id ', () => {
+describe('/api/articles/:article_id ', () => {
     test('GET - status: 200 - get articles by id', () => {
         return request(app)
           .get('/api/articles/1')
@@ -81,4 +81,27 @@ describe.only('/api/articles/:article_id ', () => {
             expect(response.body.msg).toBe('Error! Please check endpoint and try again');
           });
     });
+});
+
+describe.only('/api/articles', () => {
+  test('GET - status: 200 - get all the articles (without body), sorted in DESC order', () => {
+    return request(app)
+      .get('/api/articles')
+      .expect(200)
+      .then((response) => {
+        response.body.articles.forEach((article) => {
+          expect(typeof article).toBe('object');
+          expect(article).toHaveProperty('article_id');
+          expect(article).toHaveProperty('title');
+          expect(article).toHaveProperty('topic');
+          expect(article).toHaveProperty('author');
+          expect(article).toHaveProperty('created_at');
+          expect(article).toHaveProperty('votes');
+          expect(article).toHaveProperty('article_img_url');
+          expect(article).toHaveProperty('comment_count');
+          expect(article).not.toHaveProperty('body');
+        })
+        expect(response.body.articles).toBeSorted('created_at', { descending: true });
+      })
+  });
 });
