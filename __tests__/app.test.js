@@ -83,7 +83,7 @@ describe('/api/articles/:article_id ', () => {
     });
 });
 
-describe.only('/api/articles', () => {
+describe('/api/articles', () => {
   test('GET - status: 200 - get all the articles (without body), sorted in DESC order', () => {
     return request(app)
       .get('/api/articles')
@@ -103,5 +103,43 @@ describe.only('/api/articles', () => {
         })
         expect(response.body.articles).toBeSorted('created_at', { descending: true });
       })
+  });
+});
+
+describe('/api/articles/:article_id/comments', () => {
+  test('GET - status 200 - should return a comment including the valid id', () => {
+      return request(app)
+      .get('/api/articles/9/comments')
+      .expect(200)
+      .then((res) => {
+          res.body.comments.forEach((comment) => {
+              expect(comment).toEqual(
+                  expect.objectContaining({
+                      comment_id: expect.any(Number),
+                      article_id: expect.any(Number),
+                      votes: expect.any(Number),
+                      author: expect.any(String),
+                      body: expect.any(String),
+                      created_at: expect.any(String)
+                  })
+              )
+          });
+      });
+  });
+  test('GET - 400 - should return an error message when invalid path given', () => {
+      return request(app)
+      .get('/api/articles/nonsense/comments')
+      .expect(400)
+      .then((res) => {
+          expect(res.body.msg).toBe('Error! Please check endpoint and try again');
+      });
+  });
+  test('GET - 404 - should return error message when id is not found', () => {
+      return request(app)
+      .get('/api/articles/123456789/comments')
+      .expect(404)
+      .then((res) => {
+          expect(res.body.msg).toBe('Please insert valid id');
+      });
   });
 });

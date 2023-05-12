@@ -4,7 +4,8 @@ const {
     getTopics,
     getApi,
     getArticlesById,
-    getArticles
+    getArticles,
+    getComments
  } = require('./controllers/news.controller');
 
 
@@ -16,6 +17,7 @@ app.get('/api/articles/:articles_id', getArticlesById);
 
 app.get('/api/articles', getArticles);
 
+app.get("/api/articles/:article_id/comments", getComments);
 
 
 app.all('*', (req, res) => {
@@ -27,13 +29,20 @@ app.use ((err, req, res, next) => {
         res.status(400).send({ msg: 'Error! Please check endpoint and try again' });
       }
       next(err);
-})
+});
 
 app.use((err, req, res, next) => {
     if(err.status && err.msg) {
         res.status(err.status).send({ msg: err.msg })
     }
-})
+});
+
+app.use((err, req, res, next) => {
+    if (err.code === "23503" && err.detail.includes("(article_id)")) {
+      res.status(404).send({ msg: "Article not found" });
+    }
+    next(err);
+  });
 
 
 
