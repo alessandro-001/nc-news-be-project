@@ -1,86 +1,86 @@
+// Requires //
 const request = require('supertest');
 const app = require('../app');
 const connection = require('../db/connection');
 const seed = require('../db/seeds/seed');
 const testData = require('../db/data/test-data/index');
-const endpoints = require('../endpoints.json');
 
-
+// Jest Setup //
 beforeEach(() => { return seed(testData) });
-
 afterAll(() => connection.end());
 
 
+// GET Tests //
 describe('/api', () => {
-    test('GET - status: 200 - returns all topics', () => {
-        return request(app)
-            .get('/api/topics')
-            .expect(200)
-            .then((response) => {
-                console.log(response.body);
-                expect(response.body.topics.length).toBe(3);
-                response.body.topics.forEach((topic) => {
-                  expect(topic).toHaveProperty("description");
-                  expect(topic).toHaveProperty("slug");
-                  expect(typeof topic).toBe("object");
-                });
-            });
-    });    
-    test('GET - status: 404 - response with not-found status message', () => {
-        return request(app)
-          .get('/api/blablabla')
-          .expect(404)
+  test('GET - status: 200 - returns all topics', () => {
+      return request(app)
+          .get('/api/topics')
+          .expect(200)
           .then((response) => {
-            expect(response.body).toEqual({ msg: 'Error! Please check endpoint and try again' });
+              console.log(response.body);
+              expect(response.body.topics.length).toBe(3);
+              response.body.topics.forEach((topic) => {
+                expect(topic).toHaveProperty("description");
+                expect(topic).toHaveProperty("slug");
+                expect(typeof topic).toBe("object");
+              });
           });
-    });
+  });    
+  test('GET - status: 404 - response with not-found status message', () => {
+      return request(app)
+        .get('/api/blablabla')
+        .expect(404)
+        .then((response) => {
+          expect(response.body).toEqual({ msg: 'Error! Please check endpoint and try again' });
+        });
+  });
 });
 
 describe('/api', () => {
-    test('GET /api should return JSON with available endpoints', () => {
-        return request(app)
-          .get('/api')
-          .expect(200)
-          .then((response) => {
-            expect(typeof response.body.result).toBe('object');
-            expect(response.body.result).toHaveProperty('GET /api');
-            expect(response.body.result).toHaveProperty('GET /api/topics');
-            expect(response.body.result).toHaveProperty('GET /api/articles');
-        });
-      });      
+  test('GET /api should return JSON with available endpoints', () => {
+      return request(app)
+        .get('/api')
+        .expect(200)
+        .then((response) => {
+          expect(typeof response.body.result).toBe('object');
+          expect(response.body.result).toHaveProperty('GET /api');
+          expect(response.body.result).toHaveProperty('GET /api/topics');
+          expect(response.body.result).toHaveProperty('GET /api/articles');
+      });
+    });      
 });
 
 describe('/api/articles/:article_id ', () => {
-    test('GET - status: 200 - get articles by id', () => {
-        return request(app)
-          .get('/api/articles/1')
-          .expect(200)
-          .then((response) => {
-            expect(response.body.article.author).toBe('butter_bridge');
-            expect(response.body.article.title).toBe('Living in the shadow of a great man');
-            expect(response.body.article.topic).toBe('mitch');
-            expect(response.body.article.body).toBe('I find this existence challenging');
-            expect(response.body.article.created_at).toBe('2020-07-09T20:11:00.000Z');
-            expect(response.body.article.votes).toBe(100);
-            expect(response.body.article.article_img_url).toBe('https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700');
-        })
-    });
-    test('GET - status: 404 - response with existent id type but is not existent', () => {
-        return request(app)
-          .get('/api/articles/1234567890')
-          .expect(404)
-          .then((response) => {
-            expect(response.body.msg).toBe('Error! Please check endpoint and try again');
-          });
-    });
-    test('GET - status: 404 - response with existent id type but is not existent', () => {
-        return request(app)
-          .get('/api/articles/blablabla')
-          .expect(400)
-          .then((response) => {
-            expect(response.body.msg).toBe('Error! Please check endpoint and try again');
-          });
-    });
+  test('GET - status: 200 - get articles by id', () => {
+      return request(app)
+        .get('/api/articles/1')
+        .expect(200)
+        .then((response) => {
+          expect(response.body.article.author).toBe('butter_bridge');
+          expect(response.body.article.title).toBe('Living in the shadow of a great man');
+          expect(response.body.article.topic).toBe('mitch');
+          expect(response.body.article.body).toBe('I find this existence challenging');
+          expect(response.body.article.created_at).toBe('2020-07-09T20:11:00.000Z');
+          expect(response.body.article.votes).toBe(100);
+          expect(response.body.article.article_img_url).toBe('https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700');
+      })
+  });
+  test('GET - status: 404 - response with existent id type but is not existent', () => {
+      return request(app)
+        .get('/api/articles/1234567890')
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe('Error! Please check endpoint and try again');
+        });
+  });
+  test('GET - status: 404 - response with existent id type but is not existent', () => {
+      return request(app)
+        .get('/api/articles/blablabla')
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe('Error! Please check endpoint and try again');
+        });
+  });
 });
 
 describe('/api/articles', () => {
@@ -144,8 +144,9 @@ describe('/api/articles/:article_id/comments', () => {
   });
 });
 
+// POST Tests //
 describe("POST /api/articles/:article_id/comments", () => {
-  test("POST - status 201 - Returns status 201 and posted comment object", () => {
+  test("POST - status: 201 - Returns status 201 and posted comment object", () => {
     return request(app)
       .post("/api/articles/1/comments")
       .send({
@@ -166,7 +167,7 @@ describe("POST /api/articles/:article_id/comments", () => {
         );
       });
   });
-  test("GET - status: 400 - error message when missing the body", () => {
+  test("POST - status: 400 - error message when missing the body", () => {
     return request(app)
       .post("/api/articles/1/comments")
       .send({
@@ -177,7 +178,7 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(response.body.msg).toBe("body data required");
       });
   });
-  test("GET - status: 400 - error message when missing the author", () => {
+  test("POST - status: 400 - error message when missing the author", () => {
     return request(app)
       .post("/api/articles/1/comments")
       .send({
@@ -188,7 +189,7 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(response.body.msg).toBe("author data required");
       });
   });
-  test("GET - status: 404 - error message when username not found", () => {
+  test("POST - status: 404 - error message when username not found", () => {
     return request(app)
       .post("/api/articles/1/comments")
       .send({
@@ -200,7 +201,7 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(response.body.msg).toBe("Bad request");
       });
   });
-  test("GET - status: 404 - error message when article doen't exist", () => {
+  test("POST - status: 404 - error message when article doen't exist", () => {
     return request(app)
       .post("/api/articles/123456789/comments")
       .send({
@@ -212,7 +213,7 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(response.body.msg).toBe("Bad request");
       });
   });
-  test("GET - status: 201 - posted comment object with no extra properties", () => {
+  test("POST - status: 201 - posted comment object with no extra properties", () => {
     return request(app)
       .post("/api/articles/1/comments")
       .send({
@@ -223,6 +224,55 @@ describe("POST /api/articles/:article_id/comments", () => {
       .expect(201)
       .then((response) => {
         expect(response.body.commentPosted).not.toHaveProperty("nonsense");
+      });
+  });
+});
+
+// PATCH Tests //
+describe('/api/articles/:article_id', () => {
+  test("PATCH - status: 200 - returns status code 200 and updated object", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 1 })
+      .expect(200)
+      .then((response) => {
+        expect(response.body.fetchUpdateArticle.votes).toBe(101);
+      });
+  });
+  test("PATCH - status: 200 - it works with larger integers", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 300 })
+      .expect(200)
+      .then((response) => {
+        expect(response.body.fetchUpdateArticle.votes).toBe(400);
+      });
+  });
+  test("PATCH - status: 404 - with error message", () => {
+    return request(app)
+      .patch("/api/articles/123456789")
+      .send({ inc_votes: 1 })
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Article not existant");
+      });
+  });
+  test("PATCH - status: 400 - error message if the article_id is not a number", () => {
+    return request(app)
+      .patch("/api/articles/nonsense")
+      .send({ inc_votes: 1 })
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Error! Please check endpoint and try again");
+      });
+  });
+  test("PATCH - status: 400 - error message if inc_votes is not a number", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: "Incorrect data type" })
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Incorrect data type");
       });
   });
 });

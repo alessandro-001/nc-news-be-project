@@ -87,3 +87,23 @@ exports.fetchNewComment = (id, author, commentBody) => {
     return res.rows;
     });
 };
+
+exports.fetchUpdateArticle = (id, votesIncrement) => {
+    let selectQuery = `
+        UPDATE articles
+        SET votes = votes + $1
+        WHERE article_id = $2
+        RETURNING *;
+        `;
+        console.log(typeof votesIncrement);
+    if (typeof votesIncrement !== "number") {
+      return Promise.reject({ status: 400, msg: "Incorrect data type" });
+    }
+    return connection.query(selectQuery, [votesIncrement, id]).then((res) => {
+        console.log(res.rows);
+        if (res.rows.length === 0) {
+            return Promise.reject({ status: 404, msg: "Article not existant" });
+        }
+      return res.rows[0];
+    });
+};
