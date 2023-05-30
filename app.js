@@ -1,16 +1,21 @@
 const express = require('express');
 const app = express();
 const { 
-    getTopics,
-    getApi,
-    getArticlesById,
-    getArticles,
-    getComments,
-    postComments,
-    patchArticlesId
- } = require('./controllers/news.controller');
+  getTopics,
+  getApi,
+  getArticlesById,
+  getArticles,
+  getComments,
+  postComments,
+  patchArticlesId
+} = require('./controllers/news.controller');
 
+const cors = require('cors');
+app.use(cors());
+
+//USE
 app.use(express.json());
+
 
 //GET
 app.get('/api/topics', getTopics);
