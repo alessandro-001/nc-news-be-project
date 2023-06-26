@@ -171,7 +171,7 @@ describe("POST /api/articles/:article_id/comments", () => {
     return request(app)
       .post("/api/articles/1/comments")
       .send({
-        username: "butter_bridge",
+        username: "butter_bridge"
       })
       .expect(400)
       .then((response) => {
@@ -182,7 +182,7 @@ describe("POST /api/articles/:article_id/comments", () => {
     return request(app)
       .post("/api/articles/1/comments")
       .send({
-        body: "Thank you for posting",
+        body: "Thank you for posting"
       })
       .expect(400)
       .then((response) => {
